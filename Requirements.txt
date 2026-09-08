@@ -1,0 +1,15 @@
+langchain
+langchain_community
+langchain-core
+pypdf
+pymupdf
+ipykernel
+sentence-transformers
+faiss-cpu
+chromadb
+numpy
+langchain_groq
+python-dotenv
+rank-bm25
+streamlit
+torchvision
