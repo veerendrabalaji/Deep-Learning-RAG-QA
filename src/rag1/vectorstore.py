@@ -120,7 +120,7 @@ class FaissVectorStore:
 
         return self.search(query_emb,top_k=top_k)
 
-    def search(self,query_embedding: np.ndarray,top_k: int = 3):
+    def search(self,query_embedding: np.ndarray,top_k: int = 5):
     
             if self.index is None:
                 raise ValueError(
@@ -158,4 +158,4 @@ if __name__ == "__main__":
     store = FaissVectorStore("faiss_store")
     store.build_from_documents(docs)
     store.load()
-    print(store.query("What is Bilogical Vision?", top_k=3))
+    print(store.query("CNN receptive fields increase in deeper convolutional layers", top_k=5))

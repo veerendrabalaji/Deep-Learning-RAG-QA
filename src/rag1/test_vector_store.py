@@ -23,7 +23,7 @@ print(f"\nVectors in FAISS: {vector_store.index.ntotal}")
 
 
 # 5. Search
-query = "What is Biological Vision?"
+query = "CNN receptive fields increase in deeper convolutional layers"
 
 results = vector_store.query(
     query_text=query,

@@ -163,6 +163,9 @@ vectorstore/
 hf_cache/
 vector_store
 data/pdf/*.pdf
+src/test_semantic.py
+evaluation/retrieval_candidates.json
+evaluation/retrieval_results.json
 
 
 # Spyder project settings

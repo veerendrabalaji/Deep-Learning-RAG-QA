@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     # 4. Search
     results = retriever.retrieve(
-        "What is Biological Vision?",
+        "CNN receptive fields deeper convolutional layers",
         top_k=5
     )
 
