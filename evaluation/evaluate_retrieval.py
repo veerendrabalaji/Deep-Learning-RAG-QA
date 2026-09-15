@@ -11,6 +11,7 @@ from src.rag1.embeddings import Embedding_Pipeline
 from src.rag1.vectorstore import FaissVectorStore
 from src.rag1.keyword_retriever import KeywordRetriever
 from src.rag1.hybrid_retriever import HybridRetriever
+from src.rag1.reranker import Reranker
 
 
 DATASET_NAME = "RAG Retrieval Evaluation"
@@ -20,7 +21,6 @@ RETRIEVAL_K = 20
 
 
 # Build your existing retriever
-
 
 
 def build_retriever():
@@ -57,40 +57,34 @@ def build_retriever():
 # ---------------------------------------------------------
 
 retriever = build_retriever()
-
+reranker = Reranker()
 
 def target(inputs: dict):
-
     question = inputs["question"]
 
-    results = retriever.retrieve(
+    hybrid_results = retriever.retrieve(
         query=question,
-        top_k=TOP_K,
+        top_k=RETRIEVAL_K,
         retrieval_k=RETRIEVAL_K
     )
 
+    # Reranker disabled for baseline comparison
+    reranked_results = reranker.rerank(query=question, results=hybrid_results, top_k=TOP_K)
+    reranked_results = hybrid_results[:TOP_K]
+
     retrieved_chunks = []
-
-    for rank, result in enumerate(results, start=1):
-
+    for rank, result in enumerate(reranked_results, start=1):
         metadata = result["metadata"]
+        retrieved_chunks.append({
+            "rank": rank,
+            "chunk_id": metadata.get("chunk_id"),
+            "source": metadata.get("source"),
+            "page": metadata.get("page"),
+            "text": metadata.get("text", ""),
+            "rrf_score": result.get("rrf_score"),
+        })
 
-        retrieved_chunks.append(
-            {
-                "rank": rank,
-                "chunk_id": metadata.get("chunk_id"),
-                "source": metadata.get("source"),
-                "page": metadata.get("page"),
-                "text": metadata.get("text", ""),
-                "rrf_score": result.get("rrf_score"),
-            }
-        )
-
-    return {
-        "question": question,
-        "retrieved_chunks": retrieved_chunks
-    }
-
+    return {"question": question, "retrieved_chunks": retrieved_chunks}
 
 # ---------------------------------------------------------
 # Simple source-level evaluator
@@ -142,6 +136,7 @@ def hit_at_5(outputs, reference_outputs):
 
 def hit_at_10(outputs, reference_outputs):
     return hit_at_k(outputs, reference_outputs, 10)
+
 # ---------------------------------------------------------
 # Main
 # ---------------------------------------------------------
@@ -159,9 +154,9 @@ def main():
             hit_at_5,
             hit_at_10,
         ],
-        experiment_prefix="hybrid-retrieval-baseline",
+        experiment_prefix="hybrid-rerank-v1",
         metadata={
-            "retriever": "FAISS + BM25 + RRF",
+            "retriever": "FAISS + BM25 + RRF + CrossEncoder Rerank",
             "top_k": TOP_K,
             "retrieval_k": RETRIEVAL_K
         },
