@@ -79,30 +79,6 @@ The application provides answers along with the **source document and page numbe
                     └─────────────────┘
 ```
 
-### Query Flow
-
-```text
-User Question
-      ↓
-Hybrid Retrieval
-      ↓
-FAISS + BM25
-      ↓
-RRF Fusion
-      ↓
-Top 20 Candidates
-      ↓
-CrossEncoder Reranking
-      ↓
-Top 5 Chunks
-      ↓
-Prompt Construction
-      ↓
-Groq LLM
-      ↓
-Answer + Source Citations
-```
-
 ---
 
 ## 🧠 Retrieval Strategy
@@ -197,7 +173,7 @@ This makes it easier to verify where the answer came from.
 
 ## 📊 Evaluation
 
-The retrieval system was evaluated using a question dataset with expected source documents.
+The retrieval system was evaluated on **48 questions** with known expected source documents, using LangSmith.
 
 ### Hybrid Retrieval
 
@@ -215,33 +191,18 @@ The retrieval system was evaluated using a question dataset with expected source
 | Hit@1  | 85.4% |
 | Hit@3  | 87.5% |
 | Hit@5  | 87.5% |
+| Hit@10 | 87.5% |
 
 ### Improvement
 
-The CrossEncoder improved the ranking of the most relevant document:
-
 ```text
-Hit@1:
-81.2% → 85.4%
-
-Improvement: +4.2 percentage points
+Hit@1:  81.2% → 85.4%   (+4.2 points)
+Hit@3:  85.4% → 87.5%   (+2.1 points)
+Hit@5:  87.5% → 87.5%   (unchanged)
+Hit@10: 87.5% → 87.5%   (unchanged)
 ```
 
-For Hit@3:
-
-```text
-85.4% → 87.5%
-
-Improvement: +2.1 percentage points
-```
-
-Hit@5 remained unchanged at:
-
-```text
-87.5%
-```
-
-These results show that reranking mainly improved the **ordering of the top results**, while the hybrid retriever was already able to retrieve the relevant source within the top 5 in most cases.
+Reranking only reorders candidates already retrieved by the hybrid stage — it cannot recover chunks that hybrid retrieval missed entirely. That's why it improves Hit@1/@3 but has no effect at @5/@10. The 87.5% ceiling across all K values indicates a retrieval-recall gap, not a ranking problem — some questions never retrieve the correct source at any depth.
 
 ---
 
@@ -303,7 +264,7 @@ The sidebar also displays the main components of the RAG system.
 ## 📁 Project Structure
 
 ```text
-RAG1/
+Deep-Learning-RAG-QA/
 │
 ├── app.py
 ├── README.md
@@ -349,7 +310,7 @@ RAG1/
 ## 🛠️ Tech Stack
 
 | Component        | Technology                      |
-| ---------------- | ------------------------------- |
+| ---------------- | -------------------------------- |
 | Language         | Python                          |
 | UI               | Streamlit                       |
 | PDF Loading      | PyMuPDF                         |
@@ -371,7 +332,7 @@ RAG1/
 
 ```bash
 git clone <your-repository-url>
-cd RAG1
+cd Deep-Learning-RAG-QA
 ```
 
 ### 2. Create the environment
@@ -398,7 +359,7 @@ Create a `.env` file in the project root:
 GROQ_API_KEY=your_groq_api_key
 
 LANGSMITH_TRACING=true
-LANGSMITH_PROJECT=Deep-Learning_RAG_QA
+LANGSMITH_PROJECT=Deep-Learning-RAG-QA
 LANGSMITH_API_KEY=your_langsmith_api_key
 ```
 
@@ -460,40 +421,6 @@ Calculate metrics:
 
 ```bash
 python evaluation/calculate_metrics.py
-```
-
----
-
-## 🔄 RAG Pipeline
-
-The complete implementation can be summarized as:
-
-```text
-PDF Documents
-      ↓
-Document Loading
-      ↓
-Chunking
-      ↓
-Embedding Generation
-      ↓
-FAISS + BM25
-      ↓
-Hybrid Retrieval
-      ↓
-RRF
-      ↓
-Top 20 Candidates
-      ↓
-CrossEncoder Reranking
-      ↓
-Top 5 Chunks
-      ↓
-Prompt Construction
-      ↓
-Groq LLM
-      ↓
-Answer + Sources
 ```
 
 ---
