@@ -1,162 +1,61 @@
 [
-    {
-        "id": 1,
-        "question": "What role did vision play in the Cambrian explosion according to the text?",
-        "expected_answer": "The development of light detectors in trilobites gave them visual capabilities and may have triggered an evolutionary arms race that contributed to the Cambrian explosion.",
-        "expected_source": "BCS714A-module-1-textbook.pdf",
-        "expected_page": 1,
-        "relevant_chunks": [0, 4]
-    },
-    {
-        "id": 2,
-        "question": "What did Hubel and Wiesel discover about simple neurons?",
-        "expected_answer": "They found that neurons in the primary visual cortex are generally responsive to straight edges and that individual simple neurons respond most strongly to particular edge orientations.",
-        "expected_source": "BCS714A-module-1-textbook.pdf",
-        "expected_page": 4,
-        "relevant_chunks": [4, 5]
-    },
-    {
-        "id": 3,
-        "question": "How do simple neurons and complex neurons work together?",
-        "expected_answer": "Simple neurons detect edges at specific orientations, while complex neurons combine information from several simple neurons to represent more complex shapes such as corners and curves.",
-        "expected_source": "BCS714A-module-1-textbook.pdf",
-        "expected_page": 4,
-        "relevant_chunks": [8, 11]
-    },
-    {
-        "id": 4,
-        "question": "How does hierarchical processing make visual representations more complex?",
-        "expected_answer": "Visual information passes through successive layers of neurons, with deeper layers combining lower-level features into increasingly complex and abstract representations.",
-        "expected_source": "BCS714A-module-1-textbook.pdf",
-        "expected_page": 5,
-        "relevant_chunks": [12, 35]
-    },
-    {
-        "id": 5,
-        "question": "What is the neocognitron?",
-        "expected_answer": "The neocognitron is a machine-vision architecture proposed by Kunihiko Fukushima in the late 1970s and inspired by Hubel and Wiesel's work on simple and complex cells.",
-        "expected_source": "BCS714A-module-1-textbook.pdf",
-        "expected_page": 7,
-        "relevant_chunks": [18, 184]
-    },
-    {
-        "id": 6,
-        "question": "Why was LeNet-5 a significant development in machine vision?",
-        "expected_answer": "LeNet-5 improved the accuracy and efficiency of the neocognitron approach and benefited from better data, faster processing power, and backpropagation. It was also used commercially to read handwritten ZIP codes.",
-        "expected_source": "BCS714A-module-1-textbook.pdf",
-        "expected_page": 9,
-        "relevant_chunks": [22, 29]
-    },
-    {
-        "id": 7,
-        "question": "What is the difference between traditional machine learning and deep learning in feature engineering?",
-        "expected_answer": "Traditional machine learning usually relies heavily on manually engineered features, whereas deep learning can learn useful features automatically from raw inputs with little or no manual feature engineering.",
-        "expected_source": "BCS714A-module-1-textbook.pdf",
-        "expected_page": 10,
-        "relevant_chunks": [25, 23]
-    },
-    {
-        "id": 8,
-        "question": "How did Viola and Jones use feature engineering for face detection?",
-        "expected_answer": "They used rectangular filters to transform raw image pixels into features that could be given to machine-learning algorithms to detect faces efficiently.",
-        "expected_source": "BCS714A-module-1-textbook.pdf",
-        "expected_page": 11,
-        "relevant_chunks": [28, 26]
-    },
-    {
-        "id": 9,
-        "question": "What are ImageNet and the ILSVRC?",
-        "expected_answer": "ImageNet is a large labeled image dataset, while the ILSVRC is an image-recognition competition based on a subset of ImageNet used to benchmark machine-vision algorithms.",
-        "expected_source": "BCS714A-module-1-textbook.pdf",
-        "expected_page": 12,
-        "relevant_chunks": [30, 29]
-    },
-    {
-        "id": 10,
-        "question": "What three factors helped AlexNet achieve state-of-the-art performance in 2012?",
-        "expected_answer": "The main factors were massive training data with data augmentation, increased processing power using GPUs, and architectural advances including a deeper network.",
-        "expected_source": "BCS714A-module-1-textbook.pdf",
-        "expected_page": 14,
-        "relevant_chunks": [36, 34]
-    },
-    {
-        "id": 11,
-        "question": "What is regularization in machine learning?",
-        "expected_answer": "Regularization is a modification to a learning algorithm intended to reduce generalization error, often by adding constraints or penalties that control model complexity.",
-        "expected_source": "BCS714A-module-2-textbook.pdf",
-        "expected_page": 1,
-        "relevant_chunks": [113, 112]
-    },
-    {
-        "id": 12,
-        "question": "What is L2 regularization or weight decay?",
-        "expected_answer": "L2 regularization adds a penalty based on the squared L2 norm of the weights, which drives the weights toward zero and shrinks them during training.",
-        "expected_source": "BCS714A-module-2-textbook.pdf",
-        "expected_page": 4,
-        "relevant_chunks": [123, 133]
-    },
-    {
-        "id": 13,
-        "question": "What is the main difference between L1 and L2 regularization?",
-        "expected_answer": "L1 regularization can make some parameters exactly zero and therefore produce sparse solutions, while L2 regularization generally shrinks nonzero parameters toward zero without producing the same sparsity.",
-        "expected_source": "BCS714A-module-2-textbook.pdf",
-        "expected_page": 9,
-        "relevant_chunks": [133, 137]
-    },
-    {
-        "id": 14,
-        "question": "Why can L1 regularization be used for feature selection?",
-        "expected_answer": "L1 regularization can force a subset of weights to become zero, so the corresponding features can be identified as unnecessary and discarded.",
-        "expected_source": "BCS714A-module-2-textbook.pdf",
-        "expected_page": 10,
-        "relevant_chunks": [138, 139]
-    },
-    {
-        "id": 15,
-        "question": "What is early stopping?",
-        "expected_answer": "Early stopping stops training when validation performance stops improving, typically returning the parameters that achieved the best validation error. It is used to control effective model capacity and reduce overfitting.",
-        "expected_source": "BCS714A-module-2-textbook.pdf",
-        "expected_page": 21,
-        "relevant_chunks": [179, 184]
-    },
-    {
-        "id": 16,
-        "question": "What is dataset augmentation?",
-        "expected_answer": "Dataset augmentation creates additional training examples by applying transformations to existing training inputs.",
-        "expected_source": "BCS714A-module-2-textbook.pdf",
-        "expected_page": 13,
-        "relevant_chunks": [152, 155]
-    },
-    {
-        "id": 17,
-        "question": "Why must dataset augmentation transformations preserve the correct class?",
-        "expected_answer": "A transformation should not change the label of an example. For example, horizontal flips or 180-degree rotations can be inappropriate for OCR because they can confuse distinctions such as b versus d and 6 versus 9.",
-        "expected_source": "BCS714A-module-2-textbook.pdf",
-        "expected_page": 14,
-        "relevant_chunks": [157, 153]
-    },
-    {
-        "id": 18,
-        "question": "What is parameter sharing and why is it useful in CNNs?",
-        "expected_answer": "Parameter sharing forces different model components or locations to use the same parameters. In CNNs it lets the same feature detector operate at multiple image locations, reducing the number of unique parameters and memory requirements.",
-        "expected_source": "BCS714A-module-2-textbook.pdf",
-        "expected_page": 28,
-        "relevant_chunks": [195, 197]
-    },
-    {
-        "id": 19,
-        "question": "Why is momentum useful in neural-network optimization?",
-        "expected_answer": "Momentum accelerates learning by accumulating an exponentially decaying moving average of past gradients, which is especially useful with high curvature, small consistent gradients, or noisy gradients.",
-        "expected_source": "BCS714A-module-2-textbook.pdf",
-        "expected_page": 52,
-        "relevant_chunks": [274, 286]
-    },
-    {
-        "id": 20,
-        "question": "What is Adam and why must neural-network initialization break symmetry?",
-        "expected_answer": "Adam is an adaptive learning-rate optimization algorithm that combines momentum-like first-moment estimation with second-moment scaling and bias corrections. Initialization must break symmetry because identical hidden units with identical initial parameters would receive identical updates and remain identical.",
-        "expected_source": "BCS714A-module-2-textbook.pdf",
-        "expected_page": 64,
-        "relevant_chunks": [289, 98]
-    }
+  {"id": 1, "category": "single-hop", "question": "Who conducted the pioneering research showing that neurons in the primary visual cortex respond to specific edge orientations?", "expected_answer": "David Hubel and Torsten Wiesel.", "expected_source": "BCS714A-module-1-textbook.pdf", "expected_page": 4, "relevant_chunks": []},
+  {"id": 2, "category": "single-hop", "question": "What was the neocognitron, and who proposed it?", "expected_answer": "A hierarchical machine-vision architecture proposed by Kunihiko Fukushima in the late 1970s, inspired by Hubel and Wiesel's simple/complex cell research.", "expected_source": "BCS714A-module-1-textbook.pdf", "expected_page": 7, "relevant_chunks": []},
+  {"id": 3, "category": "single-hop", "question": "What commercial application used LeNet-5, and what percentage of US checks was it processing by the late 1990s?", "expected_answer": "It was used by the US Postal Service (deployed by NCR) to read ZIP codes on mail; it read over 10 percent of all US checks.", "expected_source": "BCS714A-module-1-textbook.pdf", "expected_page": 11, "relevant_chunks": []},
+  {"id": 4, "category": "single-hop", "question": "How many images and categories are in the full ImageNet dataset, versus the ILSVRC competition subset?", "expected_answer": "Full ImageNet has about 14 million images across 22,000 categories; the ILSVRC subset has 1.4 million images across 1,000 categories.", "expected_source": "BCS714A-module-1-textbook.pdf", "expected_page": 13, "relevant_chunks": []},
+  {"id": 5, "category": "single-hop", "question": "Who developed AlexNet, and by roughly what margin did it win the 2012 ILSVRC?", "expected_answer": "Alex Krizhevsky and Ilya Sutskever, working in Geoffrey Hinton's University of Toronto lab; it won by about a 40 percent margin.", "expected_source": "BCS714A-module-1-textbook.pdf", "expected_page": 15, "relevant_chunks": []},
+  {"id": 6, "category": "single-hop", "question": "Who is credited with the phrase 'You shall know a word by the company it keeps'?", "expected_answer": "The British linguist J.R. Firth, in 1957.", "expected_source": "BCS714A-module-1-textbook.pdf", "expected_page": 27, "relevant_chunks": []},
+  {"id": 7, "category": "single-hop", "question": "What are the two word-vector techniques named as popular methods for converting words to vectors?", "expected_answer": "word2vec and GloVe.", "expected_source": "BCS714A-module-1-textbook.pdf", "expected_page": 25, "relevant_chunks": []},
+  {"id": 8, "category": "distractor", "question": "Was AlexNet trained on a single GPU or two GPUs working in parallel?", "expected_answer": "Two GPUs.", "expected_source": "BCS714A-module-1-textbook.pdf", "expected_page": 16, "relevant_chunks": []},
+  {"id": 9, "category": "distractor", "question": "According to the text, does deep learning typically require MORE or LESS practitioner time spent on feature engineering compared to traditional machine learning?", "expected_answer": "Less — deep learning practitioners spend little to no time on feature engineering, unlike traditional ML.", "expected_source": "BCS714A-module-1-textbook.pdf", "expected_page": 12, "relevant_chunks": []},
+
+  {"id": 10, "category": "single-hop", "question": "What is L2 parameter regularization also commonly known as?", "expected_answer": "Weight decay (also called ridge regression or Tikhonov regularization).", "expected_source": "BCS714A-module-2-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 11, "category": "single-hop", "question": "What property does L1 regularization induce in model parameters that L2 regularization generally does not?", "expected_answer": "Sparsity — some parameters become exactly zero.", "expected_source": "BCS714A-module-2-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 12, "category": "single-hop", "question": "What is the LASSO model?", "expected_answer": "A model that integrates an L1 penalty with a linear model and a least-squares cost function; the L1 penalty drives a subset of weights to zero for feature selection.", "expected_source": "BCS714A-module-2-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 13, "category": "single-hop", "question": "What must be available in order to use early stopping as a regularization strategy?", "expected_answer": "A validation set, used to monitor error and decide when to halt training.", "expected_source": "BCS714A-module-2-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 14, "category": "single-hop", "question": "Why are horizontal flips and 180-degree rotations inappropriate data augmentation transforms for optical character recognition tasks?", "expected_answer": "Because they can change the correct class label, e.g. confusing 'b' with 'd' or '6' with '9'.", "expected_source": "BCS714A-module-2-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 15, "category": "single-hop", "question": "In multitask learning, what are the two general kinds of parameters a model can be divided into?", "expected_answer": "Task-specific parameters and generic (shared) parameters.", "expected_source": "BCS714A-module-2-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 16, "category": "single-hop", "question": "Why is momentum useful in neural-network optimization?", "expected_answer": "Momentum accelerates learning by accumulating an exponentially decaying moving average of past gradients, which is especially useful with high curvature, small consistent gradients, or noisy gradients.", "expected_source": "BCS714A-module-2-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 17, "category": "single-hop", "question": "What is Adam, and why must neural-network initialization break symmetry?", "expected_answer": "Adam is an adaptive learning-rate optimization algorithm combining momentum-like first-moment estimation with second-moment scaling and bias corrections. Initialization must break symmetry because identical hidden units with identical initial parameters would receive identical updates and stay identical forever.", "expected_source": "BCS714A-module-2-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 18, "category": "distractor", "question": "Which of L1 or L2 regularization is equivalent to MAP Bayesian inference with a Gaussian prior on the weights?", "expected_answer": "L2 regularization (L1 corresponds instead to a Laplace prior).", "expected_source": "BCS714A-module-2-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 19, "category": "distractor", "question": "Does the delta-bar-delta algorithm adapt a single global learning rate, or an individual learning rate per parameter?", "expected_answer": "An individual learning rate per model parameter.", "expected_source": "BCS714A-module-2-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+
+  {"id": 20, "category": "single-hop", "question": "What are the three ideas that convolution leverages to improve a machine learning system?", "expected_answer": "Sparse interactions, parameter sharing, and equivariant representations.", "expected_source": "BCS714A-module-3-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 21, "category": "single-hop", "question": "What is 'valid' convolution?", "expected_answer": "Convolution with no zero padding, where the kernel is only allowed at positions fully contained within the image, so the output shrinks.", "expected_source": "BCS714A-module-3-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 22, "category": "single-hop", "question": "What is 'same' convolution?", "expected_answer": "Convolution with just enough zero padding added so that the output size equals the input size.", "expected_source": "BCS714A-module-3-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 23, "category": "single-hop", "question": "What compromise does tiled convolution offer between locally connected layers and standard convolution?", "expected_answer": "It learns a rotating set of t kernels across spatial locations rather than one kernel shared everywhere (standard convolution) or a unique kernel at every location (locally connected).", "expected_source": "BCS714A-module-3-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 24, "category": "single-hop", "question": "What pooling operation reports the maximum output within a rectangular neighborhood?", "expected_answer": "Max pooling.", "expected_source": "BCS714A-module-3-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 25, "category": "distractor", "question": "As typically implemented in neural network libraries, does the 'convolution' operation actually flip the kernel the way true mathematical convolution does?", "expected_answer": "No — most libraries implement cross-correlation (no kernel flipping) but call it convolution.", "expected_source": "BCS714A-module-3-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 26, "category": "distractor", "question": "Between 'valid' and 'full' convolution, which one produces the LARGER output relative to the input?", "expected_answer": "'Full' convolution produces the larger output (width m+k-1), while 'valid' produces the smaller output (width m-k+1).", "expected_source": "BCS714A-module-3-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+
+  {"id": 27, "category": "single-hop", "question": "What is the algorithm used to compute gradients through an unrolled RNN computational graph, and what is its runtime complexity in terms of sequence length tau?", "expected_answer": "Back-propagation through time (BPTT); its runtime and memory cost are both O(tau).", "expected_source": "BCS714A-module-4-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 28, "category": "single-hop", "question": "What is teacher forcing?", "expected_answer": "A training technique where, at time t+1, the model receives the ground-truth output y(t) from the training set as input, rather than its own predicted output.", "expected_source": "BCS714A-module-4-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 29, "category": "single-hop", "question": "Who introduced the LSTM model and in what year?", "expected_answer": "Hochreiter and Schmidhuber, in 1997.", "expected_source": "BCS714A-module-4-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 30, "category": "single-hop", "question": "What are the three gates in a standard LSTM cell?", "expected_answer": "The forget gate, the external input gate, and the output gate.", "expected_source": "BCS714A-module-4-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 31, "category": "single-hop", "question": "What mechanism did Bahdanau et al. (2015) introduce to address the fixed-size context bottleneck in encoder-decoder sequence-to-sequence models?", "expected_answer": "The attention mechanism, which lets the context be a variable-length sequence and learns to associate elements of it with elements of the output sequence.", "expected_source": "BCS714A-module-4-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 32, "category": "distractor", "question": "In a GRU, is there a dedicated forget gate separate from the update gate, the way there is in an LSTM?", "expected_answer": "No — a GRU uses a single gating unit (the update gate) to simultaneously control forgetting and the decision to update the state, unlike the LSTM's separate forget and input gates.", "expected_source": "BCS714A-module-4-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 33, "category": "distractor", "question": "Do local minima or saddle points become more common as the dimensionality of a random nonconvex function's parameter space increases?", "expected_answer": "Saddle points become far more common than local minima in high-dimensional spaces.", "expected_source": "BCS714A-module-4-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+
+  {"id": 34, "category": "single-hop", "question": "What corpus is used to train the word2vec model, and how many words does it contain?", "expected_answer": "A Project Gutenberg corpus of 18 classic literary works, containing about 2.6 million words.", "expected_source": "BCS714A-module-5-textbook.pdf", "expected_page": 198, "relevant_chunks": []},
+  {"id": 35, "category": "single-hop", "question": "What does CBOW stand for, and what does it predict?", "expected_answer": "Continuous Bag of Words; it predicts the target word given its surrounding context words.", "expected_source": "BCS714A-module-5-textbook.pdf", "expected_page": 207, "relevant_chunks": []},
+  {"id": 36, "category": "single-hop", "question": "Which word2vec architecture, skip-gram or CBOW, is described as better suited to a small corpus and representing rare words well?", "expected_answer": "Skip-gram (SG).", "expected_source": "BCS714A-module-5-textbook.pdf", "expected_page": 208, "relevant_chunks": []},
+  {"id": 37, "category": "single-hop", "question": "What dimensionality-reduction technique is recommended for visualizing high-dimensional word vectors?", "expected_answer": "t-distributed stochastic neighbor embedding (t-SNE).", "expected_source": "BCS714A-module-5-textbook.pdf", "expected_page": 213, "relevant_chunks": []},
+  {"id": 38, "category": "single-hop", "question": "Who curated the IMDb film review dataset, and what star-rating thresholds define positive versus negative reviews?", "expected_answer": "Andrew Maas and colleagues at Stanford (2011); reviews with 4 stars or fewer are negative, 7 stars or more are positive, and 5-6 star reviews are excluded.", "expected_source": "BCS714A-module-5-textbook.pdf", "expected_page": 225, "relevant_chunks": []},
+  {"id": 39, "category": "single-hop", "question": "Which sentiment classifier architecture achieved the highest ROC AUC in the final comparison table, and what was the score?", "expected_answer": "The Multi-ConvNet architecture, with an ROC AUC of 96.2 percent.", "expected_source": "BCS714A-module-5-textbook.pdf", "expected_page": 256, "relevant_chunks": []},
+  {"id": 40, "category": "single-hop", "question": "What was the ROC AUC of the simple RNN (SimpleRNN) sentiment classifier?", "expected_answer": "84.9 percent.", "expected_source": "BCS714A-module-5-textbook.pdf", "expected_page": 244, "relevant_chunks": []},
+  {"id": 41, "category": "single-hop", "question": "What does global max pooling do to the activation map output by the convolutional sentiment classifier's Conv1D layer?", "expected_answer": "It squashes the 256x398 activation map down to 256x1, retaining only the magnitude of the largest activation per filter.", "expected_source": "BCS714A-module-5-textbook.pdf", "expected_page": 238, "relevant_chunks": []},
+  {"id": 42, "category": "distractor", "question": "Was stop-word removal applied when preprocessing the Project Gutenberg corpus for word2vec (following Maas et al.'s approach)?", "expected_answer": "No — neither stop-word removal nor stemming was applied; only lowercasing and, separately, punctuation removal were used when preparing the 'clean' corpus for bigram detection.", "expected_source": "BCS714A-module-5-textbook.pdf", "expected_page": 203, "relevant_chunks": []},
+  {"id": 43, "category": "distractor", "question": "For the RNN and LSTM sentiment classifiers, was max_review_length set higher or lower than the 400 tokens used for the CNN classifier?", "expected_answer": "Lower — it was set to 100 tokens for the RNN/LSTM models, versus 400 for the convolutional model.", "expected_source": "BCS714A-module-5-textbook.pdf", "expected_page": 242, "relevant_chunks": []},
+
+  {"id": 44, "category": "multi-hop", "question": "Chapter 2 introduces word vectors as capturing meaning from context; Chapter 11 instead learns word vectors via an Embedding() layer trained through backpropagation as part of the classifier. What advantage does Chapter 11 give for this task-specific approach over independently-trained word2vec/GloVe vectors?", "expected_answer": "The learned embedding locations reflect not just word similarity but also relevance to the specific downstream task (e.g. sentiment classification), since they're trained jointly with the classifier via backpropagation.", "expected_source": "BCS714A-module-1-textbook.pdf + BCS714A-module-5-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 45, "category": "multi-hop", "question": "Chapter 9 explains that pooling adds an infinitely strong prior of invariance to small translations. Chapter 11's convolutional sentiment classifier applies GlobalMaxPooling1D after its Conv1D layer. What information does this pooling step discard?", "expected_answer": "It discards the temporal-position-specific information in the 398-element activation map for each filter, retaining only the single maximum activation value per filter.", "expected_source": "BCS714A-module-3-textbook.pdf + BCS714A-module-5-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 46, "category": "multi-hop", "question": "Chapter 10 states that simple RNNs' gradients vanish after roughly 10 timesteps while LSTMs can backpropagate over roughly 100. How does this explain the max_review_length hyperparameter choice (100) for the RNN/LSTM sentiment classifiers, versus 400 for the CNN?", "expected_answer": "Because RNNs/LSTMs can't effectively learn from context much beyond ~10-100 timesteps due to vanishing gradients, using a much longer review length would add compute cost without benefit, unlike the CNN which isn't subject to that same limit over time.", "expected_source": "BCS714A-module-4-textbook.pdf + BCS714A-module-5-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 47, "category": "multi-hop", "question": "Chapter 7 explains that early stopping halts training once validation error stops improving. Which sentiment classifier reached its best (lowest validation loss) epoch earliest — the LSTM (trained for 4 epochs) or the RNN (trained for 16 epochs) — and at which epoch?", "expected_answer": "The LSTM reached its best epoch earlier, at epoch 2 of 4 trained, compared to the RNN's best epoch at epoch 7 of 16 trained.", "expected_source": "BCS714A-module-2-textbook.pdf + BCS714A-module-5-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+  {"id": 48, "category": "multi-hop", "question": "Chapter 1 describes Hubel and Wiesel's discovery that simple cells respond to edges at specific orientations while complex cells recombine them. What CNN concept in Chapter 9 mirrors this growth of 'receptive fields' through the visual hierarchy?", "expected_answer": "The growing receptive field of deeper units in a CNN — direct connections are sparse at each layer, but units in deeper layers are indirectly connected to a larger portion of the input, similar to how complex cells integrate information from many simple cells.", "expected_source": "BCS714A-module-1-textbook.pdf + BCS714A-module-3-textbook.pdf", "expected_page": null, "relevant_chunks": []},
+
+  {"id": 49, "category": "out-of-corpus", "question": "What is the current state-of-the-art top-1 accuracy on ImageNet as of 2025?", "expected_answer": "Not answerable from this corpus — none of the provided documents report current-day (post-publication) ImageNet benchmark results.", "expected_source": null, "expected_page": null, "relevant_chunks": []},
+  {"id": 50, "category": "out-of-corpus", "question": "What is the self-attention formula used in the Transformer architecture (e.g. scaled dot-product attention)?", "expected_answer": "Not answerable from this corpus — the documents discuss RNN-based attention (Bahdanau et al.) conceptually but do not cover the Transformer architecture or its attention formula.", "expected_source": null, "expected_page": null, "relevant_chunks": []},
+  {"id": 51, "category": "out-of-corpus", "question": "What license is the PyTorch deep learning framework released under?", "expected_answer": "Not answerable from this corpus — PyTorch is not mentioned in any of the provided documents.", "expected_source": null, "expected_page": null, "relevant_chunks": []},
+  {"id": 52, "category": "out-of-corpus", "question": "What was Google's reported BLEU score improvement after deploying neural machine translation in production?", "expected_answer": "Not answerable from this corpus — no BLEU scores or NMT production metrics are given, only a general mention that Google Translate has incorporated NMT since 2016.", "expected_source": null, "expected_page": null, "relevant_chunks": []},
+  {"id": 53, "category": "out-of-corpus", "question": "Who is Andrej Karpathy and what specific contributions did he make to convolutional network research?", "expected_answer": "Not answerable from this corpus — this person is not mentioned in any of the provided documents.", "expected_source": null, "expected_page": null, "relevant_chunks": []}
 ]
