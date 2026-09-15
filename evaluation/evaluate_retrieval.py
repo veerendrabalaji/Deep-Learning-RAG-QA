@@ -1,115 +1,216 @@
-import json
-import sys
+import os
+from dotenv import load_dotenv
+import pandas as pd
 
+load_dotenv()
+
+from langsmith import Client, evaluate
+
+from src.rag1.data_ingestion import load_all_documents
+from src.rag1.embeddings import Embedding_Pipeline
 from src.rag1.vectorstore import FaissVectorStore
 from src.rag1.keyword_retriever import KeywordRetriever
 from src.rag1.hybrid_retriever import HybridRetriever
-from src.rag1.data_ingestion import load_all_documents
-from src.rag1.embeddings import Embedding_Pipeline
 
 
-def load_evaluation_data(path):
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
+DATASET_NAME = "RAG Retrieval Evaluation"
+
+TOP_K = 10
+RETRIEVAL_K = 20
 
 
-def build_retrievers():
+# Build your existing retriever
+
+
+
+def build_retriever():
+
+    print("[INFO] Loading documents...")
+
     documents = load_all_documents("data/pdf")
 
     embedding_pipeline = Embedding_Pipeline()
+
     chunks = embedding_pipeline.chunk_documents(documents)
 
-    vector_store = FaissVectorStore()
-    vector_store.load()
+    print(f"[INFO] Total chunks: {len(chunks)}")
 
     keyword_retriever = KeywordRetriever(chunks)
 
-    hybrid_retriever = HybridRetriever(
+    vector_store = FaissVectorStore()
+
+    vector_store.load()
+
+    print("[INFO] FAISS index loaded.")
+
+    retriever = HybridRetriever(
         vector_store=vector_store,
         keyword_retriever=keyword_retriever
     )
 
-    return vector_store, keyword_retriever, hybrid_retriever
+    return retriever
 
 
-def get_chunk_ids(results):
-    return [
-        result["metadata"]["chunk_id"]
-        for result in results
-    ]
+# ---------------------------------------------------------
+# Target function
+# LangSmith calls this once for every question
+# ---------------------------------------------------------
 
-def print_results(name, results):
-    print(f"\n{name}")
+retriever = build_retriever()
+
+
+def target(inputs: dict):
+
+    question = inputs["question"]
+
+    results = retriever.retrieve(
+        query=question,
+        top_k=TOP_K,
+        retrieval_k=RETRIEVAL_K
+    )
+
+    retrieved_chunks = []
 
     for rank, result in enumerate(results, start=1):
+
         metadata = result["metadata"]
 
-        print(f"\nRank: {rank}")
-        print(f"Chunk: {metadata.get('chunk_id')}")
-        print(f"Page: {metadata.get('page')}")
-        print(f"Text: {metadata.get('text', '')[:500]}")
+        retrieved_chunks.append(
+            {
+                "rank": rank,
+                "chunk_id": metadata.get("chunk_id"),
+                "source": metadata.get("source"),
+                "page": metadata.get("page"),
+                "text": metadata.get("text", ""),
+                "rrf_score": result.get("rrf_score"),
+            }
+        )
+
+    return {
+        "question": question,
+        "retrieved_chunks": retrieved_chunks
+    }
 
 
-def evaluate():
-    data = load_evaluation_data(
-        "evaluation\evaluation_dataset.json"
+# ---------------------------------------------------------
+# Simple source-level evaluator
+# ---------------------------------------------------------
+
+from pathlib import Path
+
+def source_hit(outputs: dict, reference_outputs: dict):
+    expected_source = Path(
+        str(reference_outputs["expected_source"])
+    ).name
+
+    retrieved_sources = [
+        Path(str(chunk.get("source", ""))).name
+        for chunk in outputs.get("retrieved_chunks", [])
+    ]
+
+    return {
+        "key": "expected_source_found",
+        "score": int(expected_source in retrieved_sources)
+    }
+
+def hit_at_k(outputs: dict, reference_outputs: dict, k: int):
+    expected_source = Path(
+        str(reference_outputs["expected_source"])
+    ).name
+
+    retrieved_sources = [
+        Path(str(chunk.get("source", ""))).name
+        for chunk in outputs.get("retrieved_chunks", [])[:k]
+    ]
+
+    return {
+        "key": f"hit_at_{k}",
+        "score": int(expected_source in retrieved_sources)
+    }
+
+def hit_at_1(outputs, reference_outputs):
+    return hit_at_k(outputs, reference_outputs, 1)
+
+
+def hit_at_3(outputs, reference_outputs):
+    return hit_at_k(outputs, reference_outputs, 3)
+
+
+def hit_at_5(outputs, reference_outputs):
+    return hit_at_k(outputs, reference_outputs, 5)
+
+
+def hit_at_10(outputs, reference_outputs):
+    return hit_at_k(outputs, reference_outputs, 10)
+# ---------------------------------------------------------
+# Main
+# ---------------------------------------------------------
+def main():
+
+    client = Client()
+
+    results = evaluate(
+        target,
+        data=DATASET_NAME,
+        evaluators=[
+            source_hit,
+            hit_at_1,
+            hit_at_3,
+            hit_at_5,
+            hit_at_10,
+        ],
+        experiment_prefix="hybrid-retrieval-baseline",
+        metadata={
+            "retriever": "FAISS + BM25 + RRF",
+            "top_k": TOP_K,
+            "retrieval_k": RETRIEVAL_K
+        },
+        max_concurrency=1
     )
 
-    vector_store, keyword_retriever, hybrid_retriever = (
-        build_retrievers()
-    )
+    print("\n" + "=" * 60)
+    print("RETRIEVAL EVALUATION RESULTS")
+    print("=" * 60)
 
-    results = []
+    # Convert LangSmith experiment results to DataFrame
+    df = results.to_pandas()
 
-    for item in data:
-        question = item["question"]
+    print("\nDataFrame columns:")
+    print(df.columns.tolist())
 
-        faiss_results = vector_store.query(
-            query_text=question,
-            top_k=5
-        )
+    print("\nNumber of evaluated questions:", len(df))
 
-        bm25_results = keyword_retriever.retrieve(
-            query=question,
-            top_k=5
-        )
+    # Calculate aggregate scores
+    print("\n" + "=" * 60)
+    print("AGGREGATE RETRIEVAL METRICS")
+    print("=" * 60)
 
-        hybrid_results = hybrid_retriever.retrieve(
-            query=question,
-            top_k=5
-        )
+    for metric in [
+        "hit_at_1",
+        "hit_at_3",
+        "hit_at_5",
+        "hit_at_10"
+    ]:
 
-        results.append({
-    "id": item["id"],
-    "question": question,
-    "expected_answer": item["expected_answer"],
-    "expected_source": item["expected_source"],
-    "expected_page": item["expected_page"],
-    "relevant_chunks": item["relevant_chunks"],
-    "faiss_chunks": get_chunk_ids(faiss_results),
-    "bm25_chunks": get_chunk_ids(bm25_results),
-    "hybrid_chunks": get_chunk_ids(hybrid_results)
-})
+        matching_columns = [
+            column for column in df.columns
+            if metric in column.lower()
+        ]
 
-        print("\n" + "=" * 70)
-        print(f"Question {item['id']}: {question}")
-        print("-" * 70)
-        print(f"Expected page: {item['expected_page']}")
-        print_results("FAISS", faiss_results)
-        print_results("BM25", bm25_results)
-        print_results("HYBRID", hybrid_results)
+        if matching_columns:
 
-    with open(
-        "evaluation/retrieval_results.json",
-        "w",
-        encoding="utf-8"
-    ) as f:
-        json.dump(results, f, indent=4)
+            column = matching_columns[0]
 
-    print("\nEvaluation results saved to:")
-    print("evaluation/retrieval_results.json")
+            score = df[column].mean()
 
+            print(
+                f"{metric.upper():10} : "
+                f"{score:.3f} "
+                f"({score * 100:.1f}%)"
+            )
+
+    print("=" * 60)
 
 
 if __name__ == "__main__":
-    evaluate()
+    main()
