@@ -1,162 +1,412 @@
-# Deep Learning RAG QA
+# 📚 RAG Document Q&A
 
-A Retrieval-Augmented Generation (RAG) question-answering system for querying information from PDF documents using hybrid retrieval.
+A document-based **Retrieval-Augmented Generation (RAG)** system that answers questions from PDF documents using **hybrid retrieval, Reciprocal Rank Fusion (RRF), CrossEncoder reranking, and a Groq LLM**.
 
-The system combines **FAISS semantic search** and **BM25 keyword search** using **Reciprocal Rank Fusion (RRF)** to retrieve relevant document chunks before generating an answer with a Groq-hosted LLM.
+The application provides answers along with the **source document and page number** used for retrieval.
 
-## Features
+---
 
-* PDF document ingestion
-* Recursive text chunking
-* Semantic retrieval using FAISS
-* Keyword retrieval using BM25
-* Hybrid retrieval using Reciprocal Rank Fusion (RRF)
-* Context-aware answer generation
-* Source and page citations
-* Streamlit-based user interface
-* Retrieval evaluation using Recall@K and MRR
+## 🚀 Features
 
-## Architecture
+* 📄 PDF document ingestion
+* ✂️ Recursive text chunking
+* 🧠 Semantic search using FAISS
+* 🔎 Keyword search using BM25
+* 🔀 Hybrid retrieval using Reciprocal Rank Fusion (RRF)
+* 🎯 CrossEncoder-based reranking
+* 🤖 Answer generation using Groq LLM
+* 📚 Source document and page citations
+* 📊 Retrieval and reranking evaluation
+* 🔍 LangSmith tracing and observability
+* 🖥️ Interactive Streamlit interface
 
-```text
-PDF Documents
-      ↓
-Document Loading
-      ↓
-Text Chunking
-      ↓
-Embedding Generation
-      ↓
-FAISS Semantic Search
-      │
-      ├──────────────┐
-      ↓              ↓
-   BM25 Search    Semantic Search
-      │              │
-      └───────┬──────┘
-              ↓
-       Reciprocal Rank
-          Fusion
-              ↓
-       Relevant Context
-              ↓
-        Prompt Builder
-              ↓
-          Groq LLM
-              ↓
-        Final Answer
-              ↓
-      Source + Page Citation
-```
+---
 
-## Tech Stack
-
-* Python
-* LangChain
-* FAISS
-* BM25
-* Sentence Transformers
-* Groq
-* Streamlit
-* NumPy
-* PyPDF
-
-## Project Structure
+## 🏗️ Architecture
 
 ```text
-Deep-Learning-RAG-QA/
-│
-├── data/
-│   └── pdf/
-│       └── .gitkeep
-│
-├── evaluation/
-│   ├── evaluation_dataset.json
-│   ├── evaluate_retrieval.py
-│   ├── calculate_metrics.py
-│   └── retrieval_results.json
-│
-├── src/
-│   └── rag1/
-│       ├── data_ingestion.py
-│       ├── embeddings.py
-│       ├── vectorstore.py
-│       ├── keyword_retriever.py
-│       ├── hybrid_retriever.py
-│       ├── prompt.py
-│       ├── llm.py
-│       └── Rag_pipeline.py
-│
-├── app.py
-├── requirements.txt
-├── .env.example
-├── .gitignore
-└── README.md
+                    ┌─────────────────┐
+                    │   PDF Documents │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │ Document Loader │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │ Text Chunking   │
+                    └────────┬────────┘
+                             │
+                  ┌──────────┴──────────┐
+                  ▼                     ▼
+          ┌───────────────┐     ┌───────────────┐
+          │ FAISS Search  │     │  BM25 Search  │
+          │   Semantic    │     │    Keyword    │
+          └───────┬───────┘     └───────┬───────┘
+                  │                     │
+                  └──────────┬──────────┘
+                             ▼
+                    ┌─────────────────┐
+                    │      RRF        │
+                    │ Hybrid Fusion   │
+                    └────────┬────────┘
+                             │
+                       Top 20 candidates
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │   CrossEncoder  │
+                    │    Reranker     │
+                    └────────┬────────┘
+                             │
+                         Top 5 chunks
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │ Prompt Builder  │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │    Groq LLM     │
+                    └────────┬────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │ Answer + Sources│
+                    └─────────────────┘
 ```
 
-## Retrieval Approach
+### Query Flow
 
-The project uses two retrieval methods.
+```text
+User Question
+      ↓
+Hybrid Retrieval
+      ↓
+FAISS + BM25
+      ↓
+RRF Fusion
+      ↓
+Top 20 Candidates
+      ↓
+CrossEncoder Reranking
+      ↓
+Top 5 Chunks
+      ↓
+Prompt Construction
+      ↓
+Groq LLM
+      ↓
+Answer + Source Citations
+```
 
-### FAISS
+---
 
-FAISS performs semantic similarity search using vector embeddings. This allows the system to retrieve chunks that are conceptually similar to the user's question.
+## 🧠 Retrieval Strategy
 
-### BM25
+The system uses two complementary retrieval methods.
 
-BM25 performs keyword-based retrieval and is useful when the query contains specific technical terms or phrases.
+### 1. Semantic Search — FAISS
+
+The document chunks are converted into embeddings using:
+
+```text
+all-MiniLM-L6-v2
+```
+
+FAISS is then used to retrieve chunks that are semantically similar to the user's question.
+
+This helps when the query and document use different wording but have similar meaning.
+
+---
+
+### 2. Keyword Search — BM25
+
+BM25 is used for keyword-based retrieval.
+
+It is useful when the query contains important terms, technical terminology, names, or phrases that should match the document directly.
+
+---
+
+### 3. Reciprocal Rank Fusion
+
+The semantic and keyword results are combined using **Reciprocal Rank Fusion (RRF)**.
+
+Instead of directly comparing FAISS distances with BM25 scores, the system combines the **rank positions** of results.
+
+This produces a single ranked list of candidate chunks.
+
+---
+
+## 🎯 Reranking
+
+After hybrid retrieval, the system retrieves **20 candidate chunks**.
+
+A CrossEncoder then evaluates each:
+
+```text
+(query, document chunk)
+```
+
+pair and assigns a relevance score.
+
+The candidates are sorted using these scores and the **top 5 chunks** are passed to the generation stage.
+
+This improves the ordering of the most relevant retrieved information before sending it to the LLM.
+
+---
+
+## 🤖 Generation
+
+The final context is constructed from the top 5 reranked chunks.
+
+The prompt instructs the LLM to:
+
+* Use only the retrieved context
+* Avoid outside knowledge
+* Avoid making up information
+* Clearly answer the question
+* Indicate when the required information is not available
+
+The LLM used in this project is:
+
+```text
+openai/gpt-oss-20b
+```
+
+through the Groq API.
+
+---
+
+## 📚 Source Citations
+
+The application displays the source document and page number for retrieved information.
+
+Example:
+
+```text
+📄 BCS714A-module-2-textbook.pdf — Page 12
+```
+
+This makes it easier to verify where the answer came from.
+
+---
+
+## 📊 Evaluation
+
+The retrieval system was evaluated using a question dataset with expected source documents.
 
 ### Hybrid Retrieval
 
-The results from FAISS and BM25 are combined using **Reciprocal Rank Fusion (RRF)**.
+| Metric | Score |
+| ------ | ----: |
+| Hit@1  | 81.2% |
+| Hit@3  | 85.4% |
+| Hit@5  | 87.5% |
+| Hit@10 | 87.5% |
 
-This allows the system to benefit from both semantic similarity and exact keyword matching.
+### Hybrid Retrieval + CrossEncoder Reranking
 
-## Evaluation
+| Metric | Score |
+| ------ | ----: |
+| Hit@1  | 85.4% |
+| Hit@3  | 87.5% |
+| Hit@5  | 87.5% |
 
-The retrieval system was evaluated using a dataset of 20 questions.
+### Improvement
 
-| Retriever | Recall@1  | Recall@3  | Recall@5  | MRR       |
-| --------- | --------- | --------- | --------- | --------- |
-| FAISS     | 0.900     | 1.000     | 1.000     | 0.950     |
-| BM25      | 0.900     | 0.950     | 1.000     | 0.929     |
-| Hybrid    | **1.000** | **1.000** | **1.000** | **1.000** |
+The CrossEncoder improved the ranking of the most relevant document:
 
-The hybrid retriever achieved **100% Recall@1** and an **MRR of 1.0** on the evaluation dataset.
+```text
+Hit@1:
+81.2% → 85.4%
 
-## Setup
-
-Clone the repository:
-
-```bash
-git clone https://github.com/your-username/Deep-Learning-RAG-QA.git
-cd Deep-Learning-RAG-QA
+Improvement: +4.2 percentage points
 ```
 
-Create and activate a virtual environment:
+For Hit@3:
 
-```bash
-python -m venv venv
-venv\Scripts\activate
+```text
+85.4% → 87.5%
+
+Improvement: +2.1 percentage points
 ```
 
-Install dependencies:
+Hit@5 remained unchanged at:
 
-```bash
-pip install -r requirements.txt
+```text
+87.5%
 ```
 
-## Environment Variables
+These results show that reranking mainly improved the **ordering of the top results**, while the hybrid retriever was already able to retrieve the relevant source within the top 5 in most cases.
+
+---
+
+## 🔍 Evaluation Approach
+
+The project includes separate scripts for evaluating retrieval and reranking.
+
+```text
+evaluation/
+│
+├── evaluation_dataset.json
+├── evaluate_retrieval.py
+├── evaluate_reranker.py
+└── calculate_metrics.py
+```
+
+The evaluation focuses on whether the expected source document appears within the retrieved results.
+
+The project also contains scripts used during evaluation-data preparation:
+
+```text
+src/rag1/
+├── create_langsmith_dataset.py
+└── generate_relevance_candidates.py
+```
+
+---
+
+## 🔬 Observability
+
+The RAG pipeline is traced using **LangSmith**.
+
+Tracing helps inspect:
+
+* User queries
+* Retrieval execution
+* Reranking
+* Prompt construction
+* LLM generation
+* Overall RAG pipeline execution
+
+This makes it easier to debug and understand the behavior of the application.
+
+---
+
+## 🖥️ Streamlit Application
+
+The project includes a Streamlit interface where users can:
+
+1. Enter a question
+2. Retrieve relevant document chunks
+3. Generate an answer
+4. View the supporting source documents and pages
+
+The sidebar also displays the main components of the RAG system.
+
+---
+
+## 📁 Project Structure
+
+```text
+RAG1/
+│
+├── app.py
+├── README.md
+├── Requirements.txt
+├── pyproject.toml
+├── uv.lock
+├── .python-version
+├── .gitignore
+│
+├── data/
+│   └── pdf/
+│       └── *.pdf
+│
+├── evaluation/
+│   ├── calculate_metrics.py
+│   ├── evaluate_retrieval.py
+│   ├── evaluate_reranker.py
+│   └── evaluation_dataset.json
+│
+└── src/
+    ├── __init__.py
+    │
+    ├── test_semantic.py
+    │
+    └── rag1/
+        ├── __init__.py
+        ├── data_ingestion.py
+        ├── embeddings.py
+        ├── hybrid_retriever.py
+        ├── keyword_retriever.py
+        ├── llm.py
+        ├── prompt.py
+        ├── Rag_pipeline.py
+        ├── reranker.py
+        ├── vectorstore.py
+        │
+        ├── create_langsmith_dataset.py
+        └── generate_relevance_candidates.py
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Component        | Technology                      |
+| ---------------- | ------------------------------- |
+| Language         | Python                          |
+| UI               | Streamlit                       |
+| PDF Loading      | PyMuPDF                         |
+| Text Splitting   | LangChain Text Splitters        |
+| Embeddings       | Sentence Transformers           |
+| Vector Search    | FAISS                           |
+| Keyword Search   | BM25                            |
+| Hybrid Retrieval | Reciprocal Rank Fusion          |
+| Reranking        | CrossEncoder                    |
+| LLM              | Groq                            |
+| Observability    | LangSmith                       |
+| Environment      | uv / Python virtual environment |
+
+---
+
+## ⚙️ Installation
+
+### 1. Clone the repository
+
+```bash
+git clone <your-repository-url>
+cd RAG1
+```
+
+### 2. Create the environment
+
+Using `uv`:
+
+```bash
+uv sync
+```
+
+Or create a standard Python virtual environment and install the dependencies from:
+
+```text
+Requirements.txt
+```
+
+---
+
+## 🔑 Environment Variables
 
 Create a `.env` file in the project root:
 
-```text
+```env
 GROQ_API_KEY=your_groq_api_key
+
+LANGSMITH_TRACING=true
+LANGSMITH_PROJECT=Deep-Learning_RAG_QA
+LANGSMITH_API_KEY=your_langsmith_api_key
 ```
 
-Do not commit your `.env` file to GitHub.
+**Do not commit `.env` to GitHub.**
 
-## Add Documents
+---
+
+## 📄 Add Documents
 
 Place your PDF documents inside:
 
@@ -164,54 +414,119 @@ Place your PDF documents inside:
 data/pdf/
 ```
 
-The PDFs are not included in this repository.
+Example:
 
-## Run the Application
+```text
+data/
+└── pdf/
+    ├── document1.pdf
+    ├── document2.pdf
+    └── document3.pdf
+```
 
-Start the Streamlit application:
+The application automatically loads PDF files from this directory.
+
+> Do not upload copyrighted documents to a public repository unless you have permission to redistribute them.
+
+---
+
+## ▶️ Run the Application
+
+Start Streamlit with:
 
 ```bash
 streamlit run app.py
 ```
 
-The application allows users to enter questions and receive answers based on the uploaded documents.
+Then open the local Streamlit URL shown in the terminal.
 
-## Run Retrieval Evaluation
+---
 
-Run:
+## 🧪 Run Evaluation
+
+Retrieval evaluation:
 
 ```bash
 python evaluation/evaluate_retrieval.py
 ```
 
-Then calculate the metrics:
+Reranker evaluation:
+
+```bash
+python evaluation/evaluate_reranker.py
+```
+
+Calculate metrics:
 
 ```bash
 python evaluation/calculate_metrics.py
 ```
 
-## Example
+---
 
-**Question:**
+## 🔄 RAG Pipeline
 
-```text
-What is dataset augmentation?
-```
-
-**Answer:**
+The complete implementation can be summarized as:
 
 ```text
-Dataset augmentation is a technique that creates additional training examples by applying transformations to existing data.
-
-Source: BCS714A-module-2-textbook.pdf
-Page: 12
+PDF Documents
+      ↓
+Document Loading
+      ↓
+Chunking
+      ↓
+Embedding Generation
+      ↓
+FAISS + BM25
+      ↓
+Hybrid Retrieval
+      ↓
+RRF
+      ↓
+Top 20 Candidates
+      ↓
+CrossEncoder Reranking
+      ↓
+Top 5 Chunks
+      ↓
+Prompt Construction
+      ↓
+Groq LLM
+      ↓
+Answer + Sources
 ```
 
-## Future Improvements
+---
 
-* Answer-level evaluation
-* Faithfulness and hallucination evaluation
-* Reranking retrieved documents
-* Support for more document formats
-* Improved conversational memory
-* Better UI and document management
+## 💡 Why Hybrid Retrieval?
+
+Semantic and keyword retrieval have different strengths.
+
+**Semantic search** is useful for understanding meaning and finding conceptually similar content.
+
+**BM25** is useful for exact or important keyword matches.
+
+Combining both using RRF provides a more robust retrieval strategy than relying on only one retrieval method.
+
+---
+
+## 🎯 Project Objective
+
+The goal of this project is to build a practical and explainable RAG system that can:
+
+* Retrieve relevant information from documents
+* Reduce irrelevant context before generation
+* Improve document ranking using reranking
+* Generate answers grounded in retrieved documents
+* Provide source references
+* Evaluate retrieval performance quantitatively
+* Monitor the pipeline using LangSmith
+
+---
+
+## 👨‍💻 Author
+
+**Veerendra Balaji**
+
+Information Science Engineering
+2026 Graduate
